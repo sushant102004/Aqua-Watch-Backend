@@ -18,7 +18,9 @@ func main() {
 	client := db.ConnectToMongo("mongodb://localhost:27017")
 
 	userHandler := handler.NewUserHandler(store.NewMongoUserStore(client))
+	postHandler := handler.NewPostHandler(store.NewMongoPostStore(client))
 
 	app.Post("/user", userHandler.HandleCreateUser)
+	app.Post("/post", postHandler.HandleInsertPost)
 	app.Listen(":5000")
 }
