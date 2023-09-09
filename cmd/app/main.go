@@ -15,7 +15,7 @@ var config = fiber.Config{
 
 func main() {
 	app := fiber.New(config)
-	client := db.ConnectToMongo("mongodb://localhost:27017")
+	client := db.ConnectToMongo("mongodb+srv://sushantdhiman9812:sushant@aquawatchcluster.h6h1uow.mongodb.net/?retryWrites=true&w=majority")
 
 	userHandler := handler.NewUserHandler(store.NewMongoUserStore(client))
 	postHandler := handler.NewPostHandler(store.NewMongoPostStore(client))

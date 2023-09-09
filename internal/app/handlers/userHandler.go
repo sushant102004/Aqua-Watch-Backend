@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"reflect"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/sushant102004/aqua-watch-backend/internal/app/store"
@@ -19,7 +20,7 @@ func NewUserHandler(store store.UserStore) *UserHandler {
 }
 
 func (h *UserHandler) HandleCreateUser(ctx *fiber.Ctx) error {
-	var params *types.User
+	var params types.User
 
 	if err := ctx.BodyParser(&params); err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
@@ -27,7 +28,18 @@ func (h *UserHandler) HandleCreateUser(ctx *fiber.Ctx) error {
 		})
 	}
 
-	resp, err := h.store.CreateUser(ctx.Context(), params)
+	requiredFields := []string{"FirstName", "LastName", "Email", "Location", "FavoritePlace", "Language", "ProfilePicture"}
+
+	for _, field := range requiredFields {
+		value := reflect.ValueOf(params).FieldByName(field).String()
+		if value == "" {
+			return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+				"error": field + " is required",
+			})
+		}
+	}
+
+	resp, err := h.store.CreateUser(ctx.Context(), &params)
 
 	if err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
@@ -35,7 +47,7 @@ func (h *UserHandler) HandleCreateUser(ctx *fiber.Ctx) error {
 		})
 	}
 
-	return ctx.Status(http.StatusBadRequest).JSON(map[string]any{
+	return ctx.Status(http.StatusOK).JSON(map[string]interface{}{
 		"message": "success",
 		"user":    resp,
 	})
