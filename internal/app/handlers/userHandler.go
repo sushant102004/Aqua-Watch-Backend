@@ -28,7 +28,7 @@ func (h *UserHandler) HandleCreateUser(ctx *fiber.Ctx) error {
 		})
 	}
 
-	requiredFields := []string{"FirstName", "LastName", "Email", "Location", "FavoritePlace", "Language", "ProfilePicture"}
+	requiredFields := []string{"Name", "Email", "Location", "Language", "ProfilePicture", "PhoneNumber"}
 
 	for _, field := range requiredFields {
 		value := reflect.ValueOf(params).FieldByName(field).String()
@@ -51,4 +51,27 @@ func (h *UserHandler) HandleCreateUser(ctx *fiber.Ctx) error {
 		"message": "success",
 		"user":    resp,
 	})
+}
+
+func (h *UserHandler) HandleLoginUSer(ctx *fiber.Ctx) error {
+	email := ctx.Query("email")
+
+	if email == "" {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": "please provide email in query",
+		})
+	}
+
+	resp, err := h.store.Login(ctx.Context(), email)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return ctx.Status(http.StatusOK).JSON(map[string]interface{}{
+		"message": "success",
+		"user":    resp,
+	})
+
 }

@@ -21,6 +21,8 @@ func main() {
 	postHandler := handler.NewPostHandler(store.NewMongoPostStore(client))
 
 	app.Post("/user", userHandler.HandleCreateUser)
+	app.Get("/login", userHandler.HandleLoginUSer)
+
 	app.Post("/post", postHandler.HandleInsertPost)
 	app.Listen(":5000")
 }
