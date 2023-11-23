@@ -24,5 +24,7 @@ func main() {
 	app.Get("/login", userHandler.HandleLoginUSer)
 
 	app.Post("/post", postHandler.HandleInsertPost)
+	app.Get("/post", postHandler.HandleGetAllPosts)
+
 	app.Listen(":5000")
 }

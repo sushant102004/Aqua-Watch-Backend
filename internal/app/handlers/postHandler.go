@@ -51,7 +51,7 @@ func (h *PostHandler) HandleInsertPost(ctx *fiber.Ctx) error {
 }
 
 func (h *PostHandler) HandleGetAllPosts(ctx *fiber.Ctx) error {
-	location := ctx.Params("location")
+	location := ctx.Query("location")
 
 	if location == "" {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
