@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"reflect"
 
@@ -26,7 +27,7 @@ func (h *PostHandler) HandleInsertPost(ctx *fiber.Ctx) error {
 		})
 	}
 
-	requiredFields := []string{"UserID", "Date", "Time", "ImageURL", "Description", "DamageScore", "Coordinates"}
+	requiredFields := []string{"UserID", "Date", "Time", "ImageURL", "Description", "Coordinates", "Location"}
 
 	for _, field := range requiredFields {
 		value := reflect.ValueOf(params).FieldByName(field)
@@ -47,4 +48,23 @@ func (h *PostHandler) HandleInsertPost(ctx *fiber.Ctx) error {
 	return ctx.JSON(map[string]string{
 		"message": resp,
 	})
+}
+
+func (h *PostHandler) HandleGetAllPosts(ctx *fiber.Ctx) error {
+	location := ctx.Params("location")
+
+	if location == "" {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": "location must be specified in query params",
+		})
+	}
+
+	posts, err := h.store.GetAllPosts(context.Background(), location)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": "location must be specified in query params",
+		})
+	}
+
+	return ctx.JSON(posts)
 }

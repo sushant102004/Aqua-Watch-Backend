@@ -10,4 +10,5 @@ type UserPost struct {
 	Description string             `bson:"description" json:"description"`
 	DamageScore int                `bson:"damageScore" json:"damageScore"`
 	Coordinates []float64          `bson:"coordinates" json:"coordinates"`
+	Location    string             `bson:"location" json:"location"`
 }
