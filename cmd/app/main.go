@@ -26,5 +26,7 @@ func main() {
 	app.Post("/post", postHandler.HandleInsertPost)
 	app.Get("/post", postHandler.HandleGetAllPosts)
 
+	app.Post("/post/damage-score", postHandler.HandleUpdateDamageScore)
+
 	app.Listen(":5000")
 }

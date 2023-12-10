@@ -62,9 +62,28 @@ func (h *PostHandler) HandleGetAllPosts(ctx *fiber.Ctx) error {
 	posts, err := h.store.GetAllPosts(context.Background(), location)
 	if err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
-			"error": "location must be specified in query params",
+			"error": "unable to get all posts",
 		})
 	}
 
 	return ctx.JSON(posts)
+}
+
+func (h *PostHandler) HandleUpdateDamageScore(ctx *fiber.Ctx) error {
+	postID := ctx.Query("postID")
+
+	if postID == "" {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": "postid must be specified in query params",
+		})
+	}
+
+	err := h.store.IncreaseDamageScore(context.Background(), postID)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return ctx.SendStatus(http.StatusOK)
 }

@@ -14,6 +14,7 @@ import (
 type PostStore interface {
 	InsertPost(context.Context, *types.UserPost) (string, error)
 	GetAllPosts(context.Context, string) ([]types.UserPost, error)
+	IncreaseDamageScore(context.Context, string) error
 }
 
 type MongoPostStore struct {
@@ -54,4 +55,32 @@ func (s *MongoPostStore) GetAllPosts(ctx context.Context, location string) ([]ty
 	}
 
 	return posts, nil
+}
+
+func (s *MongoPostStore) IncreaseDamageScore(ctx context.Context, postID string) error {
+	id, err := primitive.ObjectIDFromHex(postID)
+	if err != nil {
+		return fmt.Errorf("post id incorrect")
+	}
+
+	var post types.UserPost
+
+	res := s.col.FindOne(ctx, bson.M{"_id": id})
+
+	if err := res.Decode(&post); err != nil {
+		return fmt.Errorf("error - unable to get post data: %v", err)
+	}
+
+	filter := bson.M{"_id": id}
+
+	update := bson.M{"$set": bson.M{
+		"damageScore": post.DamageScore + 1,
+	}}
+
+	_, err = s.col.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return fmt.Errorf("unable to update damage score: %v", err)
+	}
+
+	return nil
 }
