@@ -15,6 +15,7 @@ type PostStore interface {
 	InsertPost(context.Context, *types.UserPost) (string, error)
 	GetAllPosts(context.Context, string) ([]types.UserPost, error)
 	IncreaseDamageScore(context.Context, string) error
+	SearchPostsVIALocation(context.Context, string) ([]types.UserPost, error)
 }
 
 type MongoPostStore struct {
@@ -83,4 +84,21 @@ func (s *MongoPostStore) IncreaseDamageScore(ctx context.Context, postID string)
 	}
 
 	return nil
+}
+
+func (s *MongoPostStore) SearchPostsVIALocation(ctx context.Context, city string) ([]types.UserPost, error) {
+	filter := bson.M{"location": bson.M{"$regex": primitive.Regex{Pattern: city, Options: "i"}}}
+
+	res, err := s.col.Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("unable to search posts for "+city+" %v", err)
+	}
+
+	var posts []types.UserPost
+
+	if err := res.All(ctx, &posts); err != nil {
+		return nil, fmt.Errorf("error: %v", err)
+	}
+
+	return posts, nil
 }

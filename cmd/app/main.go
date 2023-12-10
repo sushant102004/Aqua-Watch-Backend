@@ -25,6 +25,7 @@ func main() {
 
 	app.Post("/post", postHandler.HandleInsertPost)
 	app.Get("/post", postHandler.HandleGetAllPosts)
+	app.Get("/post/search", postHandler.HandleSearchPostsViaCity)
 
 	app.Post("/post/damage-score", postHandler.HandleUpdateDamageScore)
 

@@ -87,3 +87,28 @@ func (h *PostHandler) HandleUpdateDamageScore(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(http.StatusOK)
 }
+
+func (h *PostHandler) HandleSearchPostsViaCity(ctx *fiber.Ctx) error {
+	city := ctx.Query("city")
+
+	if city == "" {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": "city must be specified in query params",
+		})
+	}
+
+	posts, err := h.store.SearchPostsVIALocation(context.Background(), city)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	if len(posts) == 0 {
+		return ctx.SendStatus(http.StatusNoContent)
+	}
+
+	return ctx.JSON(map[string][]types.UserPost{
+		"data": posts,
+	})
+}
