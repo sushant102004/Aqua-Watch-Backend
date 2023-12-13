@@ -29,5 +29,5 @@ func main() {
 
 	app.Post("/post/damage-score", postHandler.HandleUpdateDamageScore)
 
-	app.Listen(":5000")
+	app.Listen("0.0.0.0:5000")
 }
