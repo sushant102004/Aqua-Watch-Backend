@@ -58,7 +58,9 @@ func (h *PostHandler) HandleGetAllPosts(ctx *fiber.Ctx) error {
 		})
 	}
 
-	return ctx.JSON(posts)
+	return ctx.JSON(map[string]any{
+		"posts": posts,
+	})
 }
 
 func (h *PostHandler) HandleUpdateDamageScore(ctx *fiber.Ctx) error {
