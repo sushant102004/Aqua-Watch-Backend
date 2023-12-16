@@ -51,15 +51,7 @@ func (h *PostHandler) HandleInsertPost(ctx *fiber.Ctx) error {
 }
 
 func (h *PostHandler) HandleGetAllPosts(ctx *fiber.Ctx) error {
-	location := ctx.Query("location")
-
-	if location == "" {
-		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
-			"error": "location must be specified in query params",
-		})
-	}
-
-	posts, err := h.store.GetAllPosts(context.Background(), location)
+	posts, err := h.store.GetAllPosts(context.Background())
 	if err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
 			"error": "unable to get all posts",

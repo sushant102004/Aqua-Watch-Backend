@@ -13,7 +13,7 @@ import (
 
 type PostStore interface {
 	InsertPost(context.Context, *types.UserPost) (string, error)
-	GetAllPosts(context.Context, string) ([]types.UserPost, error)
+	GetAllPosts(context.Context) ([]types.UserPost, error)
 	IncreaseDamageScore(context.Context, string) error
 	SearchPostsVIALocation(context.Context, string) ([]types.UserPost, error)
 }
@@ -41,10 +41,8 @@ func (s *MongoPostStore) InsertPost(ctx context.Context, post *types.UserPost) (
 	return "post added successfully", nil
 }
 
-func (s *MongoPostStore) GetAllPosts(ctx context.Context, location string) ([]types.UserPost, error) {
-	filter := bson.M{"location": bson.M{"$regex": primitive.Regex{Pattern: location, Options: "i"}}}
-
-	cursor, err := s.col.Find(ctx, filter)
+func (s *MongoPostStore) GetAllPosts(ctx context.Context) ([]types.UserPost, error) {
+	cursor, err := s.col.Find(ctx, bson.D{})
 	if err != nil {
 		return nil, fmt.Errorf(err.Error())
 	}

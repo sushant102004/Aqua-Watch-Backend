@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	handler "github.com/sushant102004/aqua-watch-backend/internal/app/handlers"
 	"github.com/sushant102004/aqua-watch-backend/internal/app/store"
@@ -29,5 +31,5 @@ func main() {
 
 	app.Post("/post/damage-score", postHandler.HandleUpdateDamageScore)
 
-	app.Listen("0.0.0.0:5000")
+	log.Fatal(app.Listen(":5000"))
 }
