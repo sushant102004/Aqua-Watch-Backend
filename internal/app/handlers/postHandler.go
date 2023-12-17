@@ -54,7 +54,7 @@ func (h *PostHandler) HandleGetAllPosts(ctx *fiber.Ctx) error {
 	posts, err := h.store.GetAllPosts(context.Background())
 	if err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
-			"error": "unable to get all posts",
+			"error": "unable to get all posts" + err.Error(),
 		})
 	}
 
