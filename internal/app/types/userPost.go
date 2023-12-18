@@ -12,3 +12,9 @@ type UserPost struct {
 	Coordinates []float64          `bson:"coordinates" json:"coordinates"`
 	Location    string             `bson:"location" json:"location"`
 }
+
+type UserPostMap struct {
+	ImageURL    string    `bson:"imageUrl" json:"imageUrl"`
+	Coordinates []float64 `bson:"coordinates" json:"coordinates"`
+	DamageScore int       `bson:"damageScore" json:"damageScore"`
+}

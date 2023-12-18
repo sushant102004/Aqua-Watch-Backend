@@ -106,3 +106,21 @@ func (h *PostHandler) HandleSearchPostsViaCity(ctx *fiber.Ctx) error {
 		"data": posts,
 	})
 }
+
+func (h *PostHandler) HandleGetPostsForMap(ctx *fiber.Ctx) error {
+
+	posts, err := h.store.GetPostsForMap(context.Background())
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	if len(posts) == 0 {
+		return ctx.SendStatus(http.StatusNoContent)
+	}
+
+	return ctx.JSON(map[string][]types.UserPostMap{
+		"data": posts,
+	})
+}

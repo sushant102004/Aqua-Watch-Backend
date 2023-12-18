@@ -31,5 +31,7 @@ func main() {
 
 	app.Post("/post/damage-score", postHandler.HandleUpdateDamageScore)
 
+	app.Get("/post/map", postHandler.HandleGetPostsForMap)
+
 	log.Fatal(app.Listen(":5000"))
 }

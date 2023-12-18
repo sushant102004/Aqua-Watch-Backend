@@ -16,6 +16,8 @@ type PostStore interface {
 	GetAllPosts(context.Context) ([]types.UserPost, error)
 	IncreaseDamageScore(context.Context, string) error
 	SearchPostsVIALocation(context.Context, string) ([]types.UserPost, error)
+	// This method will only provide data that is relevant to be shown on map with marker.
+	GetPostsForMap(context.Context) ([]types.UserPostMap, error)
 }
 
 type MongoPostStore struct {
@@ -96,6 +98,20 @@ func (s *MongoPostStore) SearchPostsVIALocation(ctx context.Context, city string
 
 	if err := res.All(ctx, &posts); err != nil {
 		return nil, fmt.Errorf("error: %v", err)
+	}
+
+	return posts, nil
+}
+
+func (s *MongoPostStore) GetPostsForMap(ctx context.Context) ([]types.UserPostMap, error) {
+	cursor, err := s.col.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, fmt.Errorf(err.Error())
+	}
+
+	var posts []types.UserPostMap
+	if err := cursor.All(ctx, &posts); err != nil {
+		log.Fatal(err)
 	}
 
 	return posts, nil
