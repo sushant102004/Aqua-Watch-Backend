@@ -3,6 +3,7 @@ package types
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type UserPost struct {
+	ID          primitive.ObjectID `bson:"_id" json:"id"`
 	UserID      primitive.ObjectID `bson:"user" json:"user"`
 	Date        string             `bson:"date" json:"date"`
 	Time        string             `bson:"time" json:"time"`
