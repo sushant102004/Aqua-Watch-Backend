@@ -21,6 +21,7 @@ func main() {
 
 	userHandler := handler.NewUserHandler(store.NewMongoUserStore(client))
 	postHandler := handler.NewPostHandler(store.NewMongoPostStore(client))
+	ngoHandler := handler.NewNGOHandler(store.NewMongoNGOStore(client))
 
 	app.Post("/user", userHandler.HandleCreateUser)
 	app.Get("/login", userHandler.HandleLoginUSer)
@@ -30,8 +31,10 @@ func main() {
 	app.Get("/post/search", postHandler.HandleSearchPostsViaCity)
 
 	app.Post("/post/damage-score", postHandler.HandleUpdateDamageScore)
-
 	app.Get("/post/map", postHandler.HandleGetPostsForMap)
+
+	app.Post("/ngo/signup", ngoHandler.HandleSignUp)
+	app.Post("/ngo/login", ngoHandler.HandleLogin)
 
 	log.Fatal(app.Listen(":5000"))
 }
