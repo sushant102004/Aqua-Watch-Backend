@@ -34,7 +34,7 @@ func main() {
 	app.Get("/post/map", postHandler.HandleGetPostsForMap)
 
 	app.Post("/ngo/signup", ngoHandler.HandleSignUp)
-	app.Post("/ngo/login", ngoHandler.HandleLogin)
+	app.Get("/ngo/login", ngoHandler.HandleLogin)
 
 	log.Fatal(app.Listen(":5000"))
 }

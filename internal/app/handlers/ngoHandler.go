@@ -53,26 +53,15 @@ func (h *NGOHandler) HandleSignUp(ctx *fiber.Ctx) error {
 }
 
 func (h *NGOHandler) HandleLogin(ctx *fiber.Ctx) error {
-	var params types.NGOLogin
+	email := ctx.Query("email")
 
-	if err := ctx.BodyParser(&params); err != nil {
+	if email == "" {
 		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
-			"error": "invalid request body",
+			"error": "email is required in query parameters",
 		})
 	}
 
-	requiredFields := []string{"Email"}
-
-	for _, field := range requiredFields {
-		value := reflect.ValueOf(params).FieldByName(field)
-		if value.IsZero() {
-			return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
-				"error": field + " is required",
-			})
-		}
-	}
-
-	err := h.store.Login(context.Background(), params)
+	err := h.store.Login(context.Background(), email)
 	if err != nil {
 		return ctx.JSON(map[string]string{
 			"error": err.Error(),

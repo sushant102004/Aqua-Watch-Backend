@@ -11,7 +11,7 @@ import (
 
 type NGOStore interface {
 	SignUp(context.Context, types.NGO) error
-	Login(context.Context, types.NGOLogin) error
+	Login(context.Context, string) error
 }
 
 type MongoNGOStore struct {
@@ -36,8 +36,8 @@ func (s *MongoNGOStore) SignUp(ctx context.Context, data types.NGO) error {
 	return nil
 }
 
-func (s *MongoNGOStore) Login(ctx context.Context, data types.NGOLogin) error {
-	resp := s.col.FindOne(ctx, bson.M{"email": data.Email})
+func (s *MongoNGOStore) Login(ctx context.Context, email string) error {
+	resp := s.col.FindOne(ctx, bson.M{"email": email})
 
 	if resp.Err() == mongo.ErrNoDocuments {
 		return errors.New("ngo not found")
