@@ -61,14 +61,15 @@ func (h *NGOHandler) HandleLogin(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := h.store.Login(context.Background(), email)
+	resp, err := h.store.Login(ctx.Context(), email)
 	if err != nil {
-		return ctx.JSON(map[string]string{
+		return ctx.Status(http.StatusBadRequest).JSON(map[string]string{
 			"error": err.Error(),
 		})
 	}
 
-	return ctx.Status(http.StatusOK).JSON(map[string]string{
-		"message": "account found",
+	return ctx.Status(http.StatusOK).JSON(map[string]interface{}{
+		"message": "success",
+		"user":    resp,
 	})
 }
